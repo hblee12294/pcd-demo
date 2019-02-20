@@ -1,0 +1,22 @@
+{
+  "env": {
+    "node": true,
+    "commonjs": true,
+    "browser": true,
+    "es6": true
+  },
+  "parser": "babel-eslint",
+  "plugins": [
+    "react"
+  ],
+  "rules": {
+    "no-undef": 1,
+    "no-const-assign": 2,
+    "no-empty": 2,
+    "no-func-assign": 2,
+    "no-redeclare": 2,
+    "semi": [1, "never"],
+    "no-this-before-super": 0,
+    "no-trailing-spaces": 1
+  }
+}
