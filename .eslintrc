@@ -6,9 +6,7 @@
     "es6": true
   },
   "parser": "babel-eslint",
-  "plugins": [
-    "react"
-  ],
+  "plugins": ["react"],
   "rules": {
     "no-undef": 1,
     "no-const-assign": 2,
