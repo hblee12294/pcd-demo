@@ -5,6 +5,9 @@
     "browser": true,
     "es6": true
   },
+  "globals": {
+    "THREE": true
+  },
   "parser": "babel-eslint",
   "plugins": ["react"],
   "rules": {
