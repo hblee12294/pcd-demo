@@ -113,8 +113,8 @@ class MultipleViews extends Component {
   }
 
   onDocumentMouseMove = event => {
-    this.mouseX = event.clientX - this.canvas.width / 2
-    this.mouseY = event.clientY - this.canvas.height / 2
+    this.mouseX = event.clientX - this.canvas.clientWidth / 2
+    this.mouseY = event.clientY - this.canvas.clientHeight / 2
   }
 
   buildScene = () => {
