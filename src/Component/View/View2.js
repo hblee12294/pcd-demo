@@ -9,7 +9,9 @@ import 'three/examples/js/controls/OrbitControls'
 // import data from './data/test.pcd'
 // import data from './data/Zaghetto.pcd'
 // import data from './data/pcd_tiny/pcds/15474569195.pcd'
-import data from './data/pointcloud.pcd'
+// import data from './data/pointcloud.pcd'
+// import data from './data/pcd_new/1548920189844127.pcd'
+import data from './data/pcd_new/1548920192048413.pcd'
 
 class View extends Component {
   constructor(props) {
@@ -24,9 +26,6 @@ class View extends Component {
   }
 
   componentDidMount() {
-    this.width = this.container.clientWidth
-    this.height = this.container.clientHeight
-
     this.init()
   }
 
@@ -36,13 +35,13 @@ class View extends Component {
 
   init = () => {
     this.createCanvas()
+    this.bindEventListeners()
     this.buildScene()
     this.buildCamera()
     this.buildRenderer()
     this.buildSubject()
     this.buildHelpers()
     this.buildControls()
-    this.bindEventListeners()
 
     requestAnimationFrame(this.animate)
   }
@@ -79,14 +78,12 @@ class View extends Component {
 
   buildCamera = () => {
     this.camera = new THREE.PerspectiveCamera(
-      15,
-      this.width / this.height,
+      45,
+      this.canvas.width / this.canvas.height,
       0.01,
-      400
+      1000
     )
-    this.camera.position.x = 0.4
-    this.camera.position.z = -2
-    this.camera.up.set(0, 0, 1)
+    this.camera.position.z = 100
   }
 
   buildRenderer = () => {
@@ -95,7 +92,7 @@ class View extends Component {
       antialias: true
     })
     this.renderer.setClearColor('#000000')
-    this.renderer.setSize(this.width, this.height)
+    this.renderer.setSize(this.canvasWidth, this.canvasHeight)
   }
 
   buildSubject = () => {

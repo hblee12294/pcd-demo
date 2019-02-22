@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import logo from './logo.svg'
 import './App.css'
 
-import View from './Component/View/View2'
+// import View from './Component/View/View2'
+import View from './Component/MultipleViews/MultipleViews'
 
 class App extends Component {
   render() {
