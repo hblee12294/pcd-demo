@@ -7,19 +7,20 @@ import 'three/examples/js/controls/OrbitControls'
 
 /* TEST DATA */
 // import data from './data/test.pcd'
-import data from './data/Zaghetto.pcd'
-// import data from './data/pcd_tiny/pcds/15474569199.pcd'
+// import data from './data/Zaghetto.pcd'
+// import data from './data/pcd_tiny/pcds/15474569195.pcd'
+import data from './data/pointcloud.pcd'
 
 class View extends Component {
   constructor(props) {
     super(props)
 
     this.container
+    this.canvas
     this.scene
     this.camera
     this.renderer
     this.controls
-    this.frameId
   }
 
   componentDidMount() {
@@ -30,24 +31,46 @@ class View extends Component {
   }
 
   componentWillUnmount() {
-    cancelAnimationFrame(this.frameId)
-    this.container.removeChild(this.renderer.domElement)
+    this.container.removeChild(this.canvas)
   }
 
   init = () => {
+    this.createCanvas()
     this.buildScene()
     this.buildCamera()
     this.buildRenderer()
     this.buildSubject()
     this.buildHelpers()
     this.buildControls()
+    this.bindEventListeners()
 
-    this.frameId = requestAnimationFrame(this.animate)
+    requestAnimationFrame(this.animate)
   }
 
   createCanvas = () => {
-    const canvasEl = document.createElement('canvas')
-    return canvasEl
+    this.canvas = document.createElement('canvas')
+    this.container.append(this.canvas)
+  }
+
+  bindEventListeners = () => {
+    window.onresize = this.onWindowResize
+    window.setTimeout(this.onWindowResize, 0) // Hack here, to be figured out
+  }
+
+  onWindowResize = () => {
+    this.canvas.style.width = '100%'
+    this.canvas.style.height = '100%'
+
+    let canvasWidth = this.canvas.offsetWidth
+    let canvasHeight = this.canvas.offsetHeight
+
+    this.canvas.width = canvasWidth
+    this.canvas.height = canvasHeight
+
+    this.camera.aspect = canvasWidth / canvasHeight
+    this.camera.updateProjectionMatrix()
+
+    this.renderer.setSize(canvasWidth, canvasHeight)
   }
 
   buildScene = () => {
@@ -56,33 +79,44 @@ class View extends Component {
 
   buildCamera = () => {
     this.camera = new THREE.PerspectiveCamera(
-      50,
+      15,
       this.width / this.height,
       0.01,
       400
     )
-    this.camera.position.z = 3
-    this.camera.position.y = 0.5
+    this.camera.position.x = 0.4
+    this.camera.position.z = -2
+    this.camera.up.set(0, 0, 1)
   }
 
   buildRenderer = () => {
-    this.renderer = new THREE.WebGLRenderer({ antialias: true })
+    this.renderer = new THREE.WebGLRenderer({
+      canvas: this.canvas,
+      antialias: true
+    })
     this.renderer.setClearColor('#000000')
     this.renderer.setSize(this.width, this.height)
-    this.container.appendChild(this.renderer.domElement)
   }
 
   buildSubject = () => {
     let loader = new THREE.PCDLoader()
-    loader.load(data, mesh => {
-      this.scene.add(mesh)
-    })
+    loader.load(
+      data,
+      mesh => {
+        this.scene.add(mesh)
+      },
+      xhr => {
+        console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
+      },
+      // called when loading has errors
+      error => {
+        console.log(error)
+      }
+    )
   }
 
   buildHelpers = () => {
-    const gridHelper = new THREE.GridHelper()
-    this.scene.add(gridHelper)
-
+    this.scene.add(new THREE.GridHelper())
     this.scene.add(new THREE.AxesHelper(2))
   }
 
@@ -100,12 +134,8 @@ class View extends Component {
   }
 
   animate = () => {
-    this.renderScene()
-    requestAnimationFrame(this.animate)
-  }
-
-  renderScene = () => {
     this.renderer.render(this.scene, this.camera)
+    requestAnimationFrame(this.animate)
   }
 
   render() {
@@ -113,15 +143,10 @@ class View extends Component {
       <div className="view">
         <div
           className="main-view"
-          style={{ width: '100vw', height: '100vh' }}
           ref={container => {
             this.container = container
           }}
         />
-        {/* <div className="side-views">
-          <div className="primary-view" />
-          <div className="secondary-view" />
-        </div> */}
       </div>
     )
   }

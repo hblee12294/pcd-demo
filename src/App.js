@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import logo from './logo.svg'
 import './App.css'
 
-import View from './Component/View/View'
+import View from './Component/View/View2'
 
 class App extends Component {
   render() {
