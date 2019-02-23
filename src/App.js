@@ -3,7 +3,8 @@ import logo from './logo.svg'
 import './App.css'
 
 // import View from './Component/View/View2'
-import View from './Component/MultipleViews/MultipleViews'
+// import View from './Component/MultipleViews/MultipleViews'
+import View from './Component/MultipleElements/MultipleElements'
 
 class App extends Component {
   render() {

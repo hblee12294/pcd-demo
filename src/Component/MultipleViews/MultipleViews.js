@@ -79,7 +79,6 @@ class MultipleViews extends Component {
     this.buildLight()
     this.buildRenderer()
     this.buildSubject()
-    // this.buildHelpers()
     this.buildShadow()
 
     requestAnimationFrame(this.animate)
