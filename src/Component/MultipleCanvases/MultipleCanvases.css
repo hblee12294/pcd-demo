@@ -1,0 +1,14 @@
+.top-view {
+  height: 33vh;
+  border: 1px solid red;
+}
+
+.side-view {
+  height: 33vh;
+  border: 1px solid red;
+}
+
+.rear-view {
+  height: 33vh;
+  border: 1px solid red;
+}
