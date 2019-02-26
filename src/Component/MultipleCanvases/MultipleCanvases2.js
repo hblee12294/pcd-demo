@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import './MultipleCanvases.css'
 
+import 'three/examples/js/controls/OrbitControls'
+
 const TOP = 0
 const SIDE = 1
 const REAR = 2
@@ -22,6 +24,7 @@ class MultipleCanvases2 extends Component {
         eye: [0, 300, 1800],
         up: [0, 1, 0],
         fov: 30,
+        control: true,
         render: () => {}
       },
       {
@@ -240,6 +243,10 @@ class MultipleCanvases2 extends Component {
       view.camera = camera
       view.context = view.canvas.getContext('2d')
 
+      if (view.control) {
+        this.addControl(view)
+      }
+
       view.render = () => {
         camera.lookAt(this.scene.position)
         camera.aspect = view.width / view.height
@@ -251,6 +258,19 @@ class MultipleCanvases2 extends Component {
         view.context.drawImage(this.renderer.domElement, 0, 0)
       }
     })
+  }
+
+  addControl(view) {
+    this.controls = new THREE.OrbitControls(
+      view.camera,
+      view.canvas
+    )
+
+    // this.controls.enableDamping = true // an animation loop is required when either damping or auto-rotation are enabled
+    // this.controls.dampingFactor = 0.25
+    this.controls.screenSpacePanning = true
+    // this.controls.minDistance = 0
+    // this.controls.maxDistance = 500
   }
 
   animate = () => {

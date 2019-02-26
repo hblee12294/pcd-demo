@@ -79,7 +79,7 @@ class MultipleViews extends Component {
     this.buildLight()
     this.buildRenderer()
     this.buildSubject()
-    // this.buildShadow()
+    this.buildShadow()
 
     this.animate()
   }
@@ -143,10 +143,7 @@ class MultipleViews extends Component {
       canvas: this.canvas,
       antialias: true
     })
-    // console.log(this.renderer.getContext())
-    // console.log(this.renderer.getSize())
     this.renderer.setPixelRatio( window.devicePixelRatio )
-    // console.log(this.renderer.getContext())
   }
 
   buildLight = () => {
@@ -236,8 +233,6 @@ class MultipleViews extends Component {
 
       camera.aspect = width / height
       camera.updateProjectionMatrix()
-
-      // console.log(this.renderer.getSize())
 
       this.renderer.render(this.scene, camera)
     })
