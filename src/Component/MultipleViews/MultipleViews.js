@@ -79,9 +79,9 @@ class MultipleViews extends Component {
     this.buildLight()
     this.buildRenderer()
     this.buildSubject()
-    this.buildShadow()
+    // this.buildShadow()
 
-    requestAnimationFrame(this.animate)
+    this.animate()
   }
 
   createCanvas = () => {
@@ -101,6 +101,10 @@ class MultipleViews extends Component {
 
     let canvasWidth = this.canvas.offsetWidth
     let canvasHeight = this.canvas.offsetHeight
+
+    console.log(
+      'width: ' + this.canvas.clientWidth + ' height: ' + this.canvas.clientHeight
+    )
 
     this.canvas.width = canvasWidth
     this.canvas.height = canvasHeight
@@ -139,8 +143,10 @@ class MultipleViews extends Component {
       canvas: this.canvas,
       antialias: true
     })
+    // console.log(this.renderer.getContext())
+    // console.log(this.renderer.getSize())
     this.renderer.setPixelRatio( window.devicePixelRatio )
-    // this.renderer.setSize(this.canvas.width, this.canvas.height)
+    // console.log(this.renderer.getContext())
   }
 
   buildLight = () => {
@@ -217,7 +223,7 @@ class MultipleViews extends Component {
   animate = () => {
     this.views.map(view => {
       const camera = view.camera
-      view.updateCamera(camera, this.scene, this.mouseX, this.mouseY)
+      // view.updateCamera(camera, this.scene, this.mouseX, this.mouseY)
       const left = Math.floor(this.canvas.clientWidth * view.left)
       const top = Math.floor(this.canvas.clientHeight * view.top)
       const width = Math.floor(this.canvas.clientWidth * view.width)
@@ -230,6 +236,8 @@ class MultipleViews extends Component {
 
       camera.aspect = width / height
       camera.updateProjectionMatrix()
+
+      // console.log(this.renderer.getSize())
 
       this.renderer.render(this.scene, camera)
     })

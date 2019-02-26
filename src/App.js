@@ -5,7 +5,8 @@ import './App.css'
 // import View from './Component/View/View2'
 // import View from './Component/MultipleViews/MultipleViews'
 // import View from './Component/MultipleElements/MultipleElements'
-import View from './Component/MultipleCanvases/MultipleCanvases'
+// import View from './Component/MultipleCanvases/MultipleCanvases'
+import View from './Component/MultipleCanvases/MultipleCanvases2'
 
 class App extends Component {
   render() {

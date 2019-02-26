@@ -5,12 +5,11 @@ const TOP = 0
 const SIDE = 1
 const REAR = 2
 
-class MultipleCanvases extends Component {
+class MultipleCanvases2 extends Component {
   constructor(props) {
     super(props)
 
-    this.scene
-    this.renderer
+    this.scene, this.renderer
     this.views = [
       {
         name: 'top',
@@ -18,6 +17,8 @@ class MultipleCanvases extends Component {
         canvas: null,
         camera: null,
         context: null,
+        width: 0,
+        height: 0,
         eye: [0, 300, 1800],
         up: [0, 1, 0],
         fov: 30,
@@ -29,6 +30,8 @@ class MultipleCanvases extends Component {
         canvas: null,
         camera: null,
         context: null,
+        width: 0,
+        height: 0,
         eye: [2000, 300, 0],
         up: [0, 1, 0],
         fov: 30,
@@ -40,6 +43,8 @@ class MultipleCanvases extends Component {
         canvas: null,
         camera: null,
         context: null,
+        width: 0,
+        height: 0,
         eye: [0, 1800, 0],
         up: [0, 1, 0],
         fov: 30,
@@ -60,24 +65,22 @@ class MultipleCanvases extends Component {
 
   init = () => {
     this.createCanvases()
+    this.createRenderer()
     this.createScene()
     this.createLight()
     this.createSubjects()
     this.createShadow()
-    this.createRenderer()
-    this.createViews()
 
-    this.animate()
+    setTimeout(this.onWindowResize, 0)
+    setTimeout(this.createViews, 0)
+    setTimeout(this.animate, 0)
   }
 
   createCanvases = () => {
     this.views.forEach(view => {
-      const canvas = document.createElement('canvas')
-      const context = canvas.getContext('2d')
+      view.canvas = document.createElement('canvas')
 
-      view.container.append(canvas)
-      view.canvas = canvas
-      view.context = context
+      view.container.append(view.canvas)
     })
 
     this.bindEventListeners()
@@ -85,7 +88,6 @@ class MultipleCanvases extends Component {
 
   bindEventListeners = () => {
     window.onresize = this.onWindowResize
-    this.onWindowResize()
   }
 
   onWindowResize = () => {
@@ -95,13 +97,18 @@ class MultipleCanvases extends Component {
       canvas.style.width = '100%'
       canvas.style.height = '100%'
 
-      console.log(
-        'width: ' + canvas.clientWidth + ' height: ' + canvas.clientHeight
-      )
-
-      canvas.width = canvas.clientWidth
-      canvas.height = canvas.clientHeight
+      view.width = canvas.clientWidth
+      view.height = canvas.clientHeight
+      canvas.width = canvas.clientWidth * window.devicePixelRatio
+      canvas.height = canvas.clientHeight * window.devicePixelRatio
     })
+  }
+
+  createRenderer = () => {
+    this.renderer = new THREE.WebGLRenderer({
+      antialias: true
+    })
+    this.renderer.setPixelRatio(window.devicePixelRatio)
   }
 
   createScene() {
@@ -219,23 +226,11 @@ class MultipleCanvases extends Component {
     this.scene.add(shadowMesh)
   }
 
-  createRenderer = () => {
-    this.renderer = new THREE.WebGLRenderer({
-      antialias: true
-    })
-    this.renderer.setPixelRatio(window.devicePixelRatio)
-  }
-
   createViews = () => {
-
     this.views.forEach(view => {
-      console.log(
-        'width: ' + view.canvas.clientWidth + ' height: ' + view.canvas.clientHeight
-      )
-
       const camera = new THREE.PerspectiveCamera(
         view.fov,
-        view.canvas.width / view.canvas.height,
+        view.width / view.height,
         0.1,
         10000
       )
@@ -243,15 +238,14 @@ class MultipleCanvases extends Component {
       camera.up.fromArray(view.up)
 
       view.camera = camera
+      view.context = view.canvas.getContext('2d')
 
       view.render = () => {
         camera.lookAt(this.scene.position)
+        camera.aspect = view.width / view.height
+        camera.updateProjectionMatrix()
 
-        console.dir(view.canvas)
-        console.log(this.renderer.getSize())
-        this.renderer.setSize(view.canvas.width, view.canvas.height)
-        console.log(this.renderer.getSize())
-        console.log(this.renderer.getPixelRatio())
+        this.renderer.setSize(view.width, view.height)
         this.renderer.render(this.scene, view.camera)
 
         view.context.drawImage(this.renderer.domElement, 0, 0)
@@ -259,21 +253,12 @@ class MultipleCanvases extends Component {
     })
   }
 
-  // createViews() {
-  //   console.log('createViews')
-  //   console.log(this.views)
-
-  //   this.viewsProps.forEach(props => {
-  //     this.views.push(new View(this.renderer, this.scene, props))
-  //   })
-  // }
-
   animate = () => {
     this.views.forEach(view => {
       view.render()
     })
 
-    // requestAnimationFrame(this.animate)
+    requestAnimationFrame(this.animate)
   }
 
   render() {
@@ -281,25 +266,34 @@ class MultipleCanvases extends Component {
       <div className="view">
         <div
           className="top-view"
-          ref={container => {
-            this.views[TOP].container = container
-          }}
-        />
+          ref={container => (this.views[TOP].container = container)}
+        >
+          {/* <canvas
+            // style={{ width: '100%', height: '100%' }}
+            ref={canvas => (this.views[TOP].canvas = canvas)}
+          /> */}
+        </div>
         <div
           className="side-view"
-          ref={container => {
-            this.views[SIDE].container = container
-          }}
-        />
+          ref={container => (this.views[SIDE].container = container)}
+        >
+          {/* <canvas
+            // style={{ width: '100%', height: '100%' }}
+            ref={canvas => (this.views[SIDE].canvas = canvas)}
+          /> */}
+        </div>
         <div
           className="rear-view"
-          ref={container => {
-            this.views[REAR].container = container
-          }}
-        />
+          ref={container => (this.views[REAR].container = container)}
+        >
+          {/* <canvas
+            // style={{ width: '100%', height: '100%' }}
+            ref={canvas => (this.views[REAR].canvas = canvas)}
+          /> */}
+        </div>
       </div>
     )
   }
 }
 
-export default MultipleCanvases
+export default MultipleCanvases2
